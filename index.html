@@ -3,41 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Wifi Remaining Time.</title>
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        #qr-code {
+            margin: 20px auto; /* Center the QR code */
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #download-link {
+            display: none;
+            margin-top: 10px;
+            color: #007BFF;
+        }
+    </style>
+    <script>
+        function generateQRCode() {
+            var textInput = document.getElementById("text-input").value;
+
+            if (textInput.trim() === "") {
+                alert("Please enter text to generate QR code.");
+                return;
+            }
+
+            var qrCodeDiv = document.getElementById("qr-code");
+            qrCodeDiv.innerHTML = ""; // Clear previous QR code
+
+            var qrcode = new QRCode(qrCodeDiv, {
+                text: textInput,
+                width: 128,
+                height: 128
+            });
+
+            var downloadLink = document.getElementById("download-link");
+            downloadLink.href = qrCodeDiv.firstChild.toDataURL("image/png");
+            downloadLink.download = "qrcode.png";
+            downloadLink.style.display = "block";
+        }
+    </script>
 </head>
 <body>
-    <h1>Free Remaining Hours.</h1>
-    <br>
-    <p>Don't Refresh the page.</p>
-    <div id="countdown"></div>
-  
-    <script>
-      // Set the countdown duration in milliseconds (4 hours)
-      const countdownDuration = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
-  
-      let startTime = Date.now();
-  
-      function updateCountdown() {
-        const currentTime = Date.now();
-        const elapsedTime = currentTime - startTime;
-        const remainingTime = countdownDuration - elapsedTime;
-  
-        if (remainingTime > 0) {
-          const hours = Math.floor(remainingTime / (1000 * 60 * 60));
-          const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-  
-          document.getElementById("countdown").innerHTML = `${hours}h ${minutes}m ${seconds}s`;
-        } else {
-          document.getElementById("countdown").innerHTML = "Countdown expired!";
-        }
-      }
-  
-      // Update the countdown every second
-      setInterval(updateCountdown, 1000);
-  
-      // Initial update
-      updateCountdown();
-    </script>
-  </body>
+    <h1>QR Code Generator</h1>
+
+    <label for="text-input">Enter text to generate QR code:</label>
+    <input type="text" id="text-input" placeholder="Enter text">
+
+    <button onclick="generateQRCode()">Generate QR Code</button>
+
+    <div id="qr-code"></div>
+
+    <a id="download-link">Download QR Code</a>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
 </html>
